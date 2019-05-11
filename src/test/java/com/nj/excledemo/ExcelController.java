@@ -1,15 +1,19 @@
 package com.nj.excledemo;
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.awt.image.BufferedImage;
+import java.io.*;
+import java.net.URL;
 
-import org.apache.poi.ss.usermodel.*;
-import org.apache.poi.xssf.usermodel.XSSFCell;
-import org.apache.poi.xssf.usermodel.XSSFRow;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.junit.Test;
+import org.apache.poi.hssf.usermodel.HSSFClientAnchor;
+import org.apache.poi.hssf.usermodel.HSSFPatriarch;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.ClientAnchor;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.xssf.usermodel.XSSFClientAnchor;
+
+import javax.imageio.ImageIO;
 
 /**
  * 测试POI
@@ -17,69 +21,44 @@ import org.junit.Test;
  * @author Loren
  */
 public class ExcelController {
-    @Test
-    public void Poi1Test() throws IOException {
-        // 创建工作簿
-        XSSFWorkbook wb = new XSSFWorkbook();
-        // 工作表
-        XSSFSheet sheet = wb.createSheet("学生信息表");
-        // 标头行，代表第一行
-        XSSFRow header = sheet.createRow(0);
-        XSSFRow row = sheet.createRow(1);
-        row.createCell(0).setCellValue("01");
-        row.createCell(1).setCellValue("ss");
-        row.createCell(2).setCellValue("aa");
-        // 创建单元格，0表第一代行第一列
-        XSSFCell cell = header.createCell(0);
-        cell.setCellValue("学号");
-
-        header.createCell(1).setCellValue("姓名");
-        header.createCell(2).setCellValue("专业");
-        header.createCell(3).setCellValue("班级");
-        header.createCell(4).setCellValue("身份证号");
-        header.createCell(5).setCellValue("宿舍号");
-        header.createCell(6).setCellValue("报道日期");
-        // 设置列的宽度
-        // getPhysicalNumberOfCells()代表这行有多少包含数据的列
-        for (int i = 0; i < header.getPhysicalNumberOfCells(); i++) {
-            // POI设置列宽度时比较特殊，它的基本单位是1/255个字符大小，
-            // 因此我们要想让列能够盛的下20个字符的话，就需要用255*20
-            sheet.setColumnWidth(i, 255 * 20);
-        }
-        // 设置行高，30像素
-        header.setHeightInPoints(30);
-        //输出文件要么是 \\要么/否则会报错
-        FileOutputStream fos = new FileOutputStream("F:/PoiDemo.xlsx");
-        // 向指定文件写入内容
-        wb.write(fos);
-        //关闭流
-        fos.close();
-    }
-
-    @Test
-    public void upload() {
+    public static void main(String[] args) throws Exception {
+        FileOutputStream fileOut = null;
+        BufferedImage bufferImg = null;
         try {
-            XSSFWorkbook workbook = new XSSFWorkbook(new FileInputStream("F:/PoiDemo.xlsx"));
-            XSSFSheet sheet = workbook.getSheet("学生信息表");
-            XSSFRow row;
-            for (int j = 0; j<=sheet.getLastRowNum(); j++) {
-                for (int i = 0; i < 7; i++) {
-                    row = sheet.getRow(j);
-                    try {
-                        row.getCell((short) i).setCellType(Cell.CELL_TYPE_STRING);
-                    } catch (Exception e) {
-                    }
-                    String stringCellValue = null;
-                    try {
-                        stringCellValue = row.getCell((short) i).getStringCellValue();
-                    } catch (Exception e) {
+            // 先把读进来的图片放到一个ByteArrayOutputStream中，以便产生ByteArray
+            // 读入图片1
+            ByteArrayOutputStream byteArrayOut = new ByteArrayOutputStream();
+            URL url = new URL("http://test.cncnews.cn:8080/wup/upload/1.JPG");
+            bufferImg = ImageIO.read(url);
+            ImageIO.write(bufferImg, "jpg", byteArrayOut);
 
-                    }
-                    System.out.println(stringCellValue);
+            // 创建一个工作薄
+            HSSFWorkbook wb = new HSSFWorkbook();
+            HSSFSheet sheet1 = wb.createSheet("test picture");
+            HSSFPatriarch patriarch = sheet1.createDrawingPatriarch();
+
+
+            HSSFClientAnchor anchor = new HSSFClientAnchor(0, 0, 1023, 255, (short) 6, 7, (short) 6, 7);
+            anchor.setAnchorType(3);
+
+            // 插入图片1
+            patriarch.createPicture(anchor, wb.addPicture(byteArrayOut.toByteArray(), HSSFWorkbook.PICTURE_TYPE_JPEG));
+
+            fileOut = new FileOutputStream("F:/workbook.xls");
+            // 写入excel文件
+            wb.write(fileOut);
+            fileOut.close();
+        } catch (IOException io) {
+            io.printStackTrace();
+            System.out.println("erorr : " + io.getMessage());
+        } finally {
+            if (fileOut != null) {
+                try {
+                    fileOut.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
             }
-        } catch (Exception e) {
-            System.out.println("已运行xlRead() : " + e);
         }
     }
 }
