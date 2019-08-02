@@ -14,11 +14,11 @@ import java.util.List;
  **/
 @Service
 public class CostCenterService {
-    @Autowired
+    /*@Autowired
     private CostCenterMapper costCenterMapper;
 
     public List<CostCenter> costList() {
         List<CostCenter> costCenters = costCenterMapper.findAll();
         return costCenters;
-    }
+    }*/
 }

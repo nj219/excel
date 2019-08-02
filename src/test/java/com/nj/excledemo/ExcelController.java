@@ -1,3 +1,4 @@
+/*
 package com.nj.excledemo;
 
 import java.awt.image.BufferedImage;
@@ -15,11 +16,13 @@ import org.apache.poi.xssf.usermodel.XSSFClientAnchor;
 
 import javax.imageio.ImageIO;
 
+*/
 /**
  * 测试POI
  *
  * @author Loren
- */
+ *//*
+
 public class ExcelController {
     public static void main(String[] args) throws Exception {
         FileOutputStream fileOut = null;
@@ -28,7 +31,7 @@ public class ExcelController {
             // 先把读进来的图片放到一个ByteArrayOutputStream中，以便产生ByteArray
             // 读入图片1
             ByteArrayOutputStream byteArrayOut = new ByteArrayOutputStream();
-            URL url = new URL("http://test.cncnews.cn:8080/wup/upload/1.JPG");
+            URL url = new URL("http://test.cncnews.cn:8080/wup/upload/1.jpg");
             bufferImg = ImageIO.read(url);
             ImageIO.write(bufferImg, "jpg", byteArrayOut);
 
@@ -61,4 +64,4 @@ public class ExcelController {
             }
         }
     }
-}
+}*/

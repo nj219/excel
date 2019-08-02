@@ -1,3 +1,4 @@
+/*
 package com.nj.excledemo.controller;
 
 import com.nj.excledemo.domain.CostCenter;
@@ -19,11 +20,13 @@ import java.io.OutputStream;
 import java.net.URL;
 import java.util.*;
 
+*/
 /**
  * @ClassName test
  * @Author shangpinyuan06
  * @Date 2019/5/11 9:59
- **/
+ **//*
+
 @Controller
 public class test {
     @Autowired
@@ -39,7 +42,7 @@ public class test {
         String filePath = "F:\\export.xls";
         OutputStream os = new FileOutputStream(filePath);
 
-        List<CostCenter> list = costCenterService.costList();
+        //List<CostCenter> list = costCenterService.costList();
 
         Collection collection = new ArrayList();
         Map<String,Object> map = new HashMap();
@@ -62,3 +65,4 @@ public class test {
         exportExcel.exportXSExcelByColumn("零件数据",arr,arr,collection,os,"");
     }
 }
+*/
